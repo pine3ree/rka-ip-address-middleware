@@ -108,12 +108,9 @@ class IpAddress
             $ipAddress = $serverParams['REMOTE_ADDR'];
         }
         
-        if (!$this->checkProxyHeaders) {
-            return $ipAddress;
-        }
-        
-        if (!empty($this->trustedProxies)
-            && !in_array($ipAddress, $this->trustedProxies, true)
+        if (!$this->checkProxyHeaders 
+            || empty($this->trustedProxies) 
+            || !in_array($ipAddress, $this->trustedProxies, true)
        ) {
             return $ipAddress;
         }
