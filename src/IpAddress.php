@@ -109,8 +109,9 @@ class IpAddress
         }
 
         if (!$this->checkProxyHeaders
-            || empty($this->trustedProxies)
-            || !in_array($ipAddress, $this->trustedProxies, true)
+            || (   !empty($this->trustedProxies)
+                && !in_array($ipAddress, $this->trustedProxies, true)
+            )
         ) {
             return $ipAddress;
         }
