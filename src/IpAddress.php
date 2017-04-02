@@ -107,11 +107,11 @@ class IpAddress
         if (isset($serverParams['REMOTE_ADDR']) && $this->isValidIpAddress($serverParams['REMOTE_ADDR'])) {
             $ipAddress = $serverParams['REMOTE_ADDR'];
         }
-        
-        if (!$this->checkProxyHeaders 
-            || empty($this->trustedProxies) 
+
+        if (!$this->checkProxyHeaders
+            || empty($this->trustedProxies)
             || !in_array($ipAddress, $this->trustedProxies, true)
-       ) {
+        ) {
             return $ipAddress;
         }
 
