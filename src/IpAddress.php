@@ -107,22 +107,22 @@ class IpAddress
         if (isset($serverParams['REMOTE_ADDR']) && $this->isValidIpAddress($serverParams['REMOTE_ADDR'])) {
             $ipAddress = $serverParams['REMOTE_ADDR'];
         }
-
-        $checkProxyHeaders = $this->checkProxyHeaders;
-        if ($checkProxyHeaders && !empty($this->trustedProxies)) {
-            if (!in_array($ipAddress, $this->trustedProxies)) {
-                $checkProxyHeaders = false;
-            }
+        
+        if (!$this->checkProxyHeaders) {
+            return $ipAddress;
+        }
+        
+        if (!empty($this->trustedProxies)
+            && !in_array($ipAddress, $this->trustedProxies, true)
+       ) {
+            return $ipAddress;
         }
 
-        if ($checkProxyHeaders) {
-            foreach ($this->headersToInspect as $header) {
-                if ($request->hasHeader($header)) {
-                    $ip = $this->getFirstIpAddressFromHeader($request, $header);
-                    if ($this->isValidIpAddress($ip)) {
-                        $ipAddress = $ip;
-                        break;
-                    }
+        foreach ($this->headersToInspect as $header) {
+            if ($request->hasHeader($header)) {
+                $ip = $this->getFirstIpAddressFromHeader($request, $header);
+                if ($this->isValidIpAddress($ip)) {
+                    return $ip;
                 }
             }
         }
